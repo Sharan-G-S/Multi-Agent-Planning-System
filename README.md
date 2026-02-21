@@ -3,7 +3,7 @@
 An intelligent AI-powered travel planning platform that leverages **multi-agent orchestration** to coordinate specialized tasks — flight search, hotel booking, and itinerary generation. Each agent is an expert in its domain, working together through a stateful pipeline to craft personalized, comprehensive travel plans.
 
 ---
-#Sharan G S
+# Sharan G S
 
 ## Architecture
 
