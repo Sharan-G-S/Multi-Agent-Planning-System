@@ -18,10 +18,12 @@ const resultsSummary = document.getElementById('resultsSummary');
 const tabBtns = document.querySelectorAll('.tab-btn');
 const flightsTab = document.getElementById('flightsTab');
 const hotelsTab = document.getElementById('hotelsTab');
+const trainsTab = document.getElementById('trainsTab');
 const itineraryTab = document.getElementById('itineraryTab');
 
 const flightCount = document.getElementById('flightCount');
 const hotelCount = document.getElementById('hotelCount');
+const trainCount = document.getElementById('trainCount');
 const itineraryCount = document.getElementById('itineraryCount');
 
 // Agent cards
@@ -29,6 +31,7 @@ const agentCards = {
     flight: document.getElementById('agent-flight'),
     hotel: document.getElementById('agent-hotel'),
     itinerary: document.getElementById('agent-itinerary'),
+    train: document.getElementById('agent-train'),
 };
 
 // Set default dates (departure: tomorrow, return: 5 days later)
@@ -54,6 +57,7 @@ tabBtns.forEach(btn => {
         const tab = btn.dataset.tab;
         flightsTab.style.display = tab === 'flights' ? 'block' : 'none';
         hotelsTab.style.display = tab === 'hotels' ? 'block' : 'none';
+        trainsTab.style.display = tab === 'trains' ? 'block' : 'none';
         itineraryTab.style.display = tab === 'itinerary' ? 'block' : 'none';
     });
 });
@@ -96,10 +100,11 @@ function updatePipelineStep(step, status) {
 }
 
 async function animatePipeline(stepsCompleted) {
-    const steps = ['collect_input', 'search_flights', 'search_hotels', 'build_itinerary', 'compile_results'];
+    const steps = ['collect_input', 'search_flights', 'search_hotels', 'search_trains', 'build_itinerary', 'compile_results'];
     const agentMapping = {
         'search_flights': 'flight',
         'search_hotels': 'hotel',
+        'search_trains': 'train',
         'build_itinerary': 'itinerary',
     };
 
@@ -201,6 +206,7 @@ function renderResults(data, formData) {
     // Summary
     const flights = data.flights || [];
     const hotels = data.hotels || [];
+    const trains = data.trains || [];
     const itinerary = data.itinerary || [];
 
     resultsSummary.innerHTML = `
@@ -218,6 +224,7 @@ function renderResults(data, formData) {
     // Update counts
     flightCount.textContent = flights.length;
     hotelCount.textContent = hotels.length;
+    trainCount.textContent = trains.length;
     itineraryCount.textContent = itinerary.length + (itinerary.length === 1 ? ' day' : ' days');
 
     // Render flights
@@ -225,6 +232,9 @@ function renderResults(data, formData) {
 
     // Render hotels
     renderHotels(hotels);
+
+    // Render trains
+    renderTrains(trains);
 
     // Render itinerary
     renderItinerary(itinerary);
@@ -234,6 +244,7 @@ function renderResults(data, formData) {
     tabBtns[0].classList.add('active');
     flightsTab.style.display = 'block';
     hotelsTab.style.display = 'none';
+    trainsTab.style.display = 'none';
     itineraryTab.style.display = 'none';
 }
 
@@ -299,6 +310,53 @@ function renderHotels(hotels) {
     `).join('');
 }
 
+function renderTrains(trains) {
+    if (!trains.length) {
+        trainsTab.innerHTML = '<p style="color:var(--text-muted); padding:1rem;">No Indian Railways data available. Try searching between Indian cities (e.g. Delhi to Mumbai).</p>';
+        return;
+    }
+
+    trainsTab.innerHTML = trains.map(t => {
+        const availClass = (t.availability || '').toLowerCase().replace(' ', '');
+        let availCss = 'avail-available';
+        if (availClass === 'rac') availCss = 'avail-rac';
+        if (availClass === 'waitlist') availCss = 'avail-waitlist';
+
+        return `
+        <div class="train-card">
+            <div class="train-info">
+                <h4>${t.train_name || 'Unknown Train'}</h4>
+                <div class="train-number">${t.train_number || ''} &middot; ${t.train_type || ''}</div>
+                <div class="train-meta">
+                    <span class="train-meta-tag class-tag">${t.class || t.class_code || ''}</span>
+                    <span class="train-meta-tag ${availCss}">${t.availability || 'Available'}</span>
+                    ${t.pantry ? '<span class="train-meta-tag class-tag"><i class="fas fa-utensils" style="font-size:0.5rem"></i> Pantry</span>' : ''}
+                </div>
+            </div>
+            <div class="train-route">
+                <div class="flight-time">${t.departure_time || '--:--'}</div>
+                <div class="route-stations">
+                    <span>${t.origin_code || ''}</span>
+                    <span class="line"></span>
+                    <i class="fas fa-train" style="font-size:0.5rem; color:var(--accent-amber)"></i>
+                    <span class="line"></span>
+                    <span>${t.destination_code || ''}</span>
+                </div>
+                <div style="font-size:0.65rem; color:var(--text-muted);">${t.duration || ''} &middot; ${t.distance_km || ''}km</div>
+            </div>
+            <div style="font-size:0.65rem; color:var(--text-muted); text-align:center;">
+                <div style="margin-bottom:0.2rem;"><i class="fas fa-calendar-day"></i> ${t.runs_on || 'Daily'}</div>
+            </div>
+            <div class="train-fare">
+                <div class="train-fare-inr">&#8377;${(t.fare_inr || 0).toLocaleString('en-IN')}</div>
+                <div class="train-fare-usd">~$${(t.fare_usd || 0).toFixed(2)} USD</div>
+                <div class="train-fare-class">${t.class || ''}</div>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
 function renderItinerary(itinerary) {
     if (!itinerary.length) {
         itineraryTab.innerHTML = '<p style="color:var(--text-muted); padding:1rem;">No itinerary data available.</p>';
@@ -353,5 +411,6 @@ function showError(message) {
     `;
     flightsTab.innerHTML = '';
     hotelsTab.innerHTML = '';
+    trainsTab.innerHTML = '';
     itineraryTab.innerHTML = '';
 }

@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multi-Agent Travel Planner | AI-Powered Trip Planning</title>
-    <meta name="description" content="Intelligent AI-powered travel planning with multi-agent orchestration for flights, hotels, and itineraries.">
+    <meta name="description"
+        content="Intelligent AI-powered travel planning with multi-agent orchestration for flights, hotels, and itineraries.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
+
 <body>
     <!-- Animated Background -->
     <div class="bg-grid"></div>
@@ -77,6 +81,17 @@
                         <span class="status-text">Ready</span>
                     </div>
                 </div>
+                <div class="agent-card" id="agent-train" data-agent="train">
+                    <div class="agent-icon train-icon"><i class="fas fa-train"></i></div>
+                    <div class="agent-info">
+                        <h3>Railways Specialist</h3>
+                        <p>Indian Railways routes & fares in INR</p>
+                    </div>
+                    <div class="agent-status">
+                        <span class="status-dot ready"></span>
+                        <span class="status-text">Ready</span>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -87,11 +102,13 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="origin"><i class="fas fa-plane-departure"></i> From</label>
-                        <input type="text" id="origin" name="origin" placeholder="e.g. New York, NYC" value="New York" required>
+                        <input type="text" id="origin" name="origin" placeholder="e.g. New York, NYC" value="New York"
+                            required>
                     </div>
                     <div class="form-group">
                         <label for="destination"><i class="fas fa-plane-arrival"></i> To</label>
-                        <input type="text" id="destination" name="destination" placeholder="e.g. Paris, London, Tokyo" required>
+                        <input type="text" id="destination" name="destination" placeholder="e.g. Paris, London, Tokyo"
+                            required>
                     </div>
                     <div class="form-group">
                         <label for="departure_date"><i class="fas fa-calendar-alt"></i> Departure</label>
@@ -115,11 +132,14 @@
                     </div>
                     <div class="form-group full-width">
                         <label for="interests"><i class="fas fa-heart"></i> Interests</label>
-                        <input type="text" id="interests" name="interests" placeholder="e.g. culture, food, history, adventure, nightlife" value="culture, food, history">
+                        <input type="text" id="interests" name="interests"
+                            placeholder="e.g. culture, food, history, adventure, nightlife"
+                            value="culture, food, history">
                     </div>
                     <div class="form-group full-width">
                         <label for="special_requests"><i class="fas fa-star"></i> Special Requests</label>
-                        <textarea id="special_requests" name="special_requests" rows="2" placeholder="Any special requirements or preferences..."></textarea>
+                        <textarea id="special_requests" name="special_requests" rows="2"
+                            placeholder="Any special requirements or preferences..."></textarea>
                     </div>
                 </div>
                 <button type="submit" class="btn-plan" id="submitBtn">
@@ -151,6 +171,11 @@
                     <span>Search Hotels</span>
                 </div>
                 <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="pipeline-node" data-step="search_trains">
+                    <div class="node-icon"><i class="fas fa-train"></i></div>
+                    <span>Search Trains</span>
+                </div>
+                <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
                 <div class="pipeline-node" data-step="build_itinerary">
                     <div class="node-icon"><i class="fas fa-map"></i></div>
                     <span>Build Itinerary</span>
@@ -180,6 +205,10 @@
                     <i class="fas fa-hotel"></i> Hotels
                     <span class="tab-count" id="hotelCount">0</span>
                 </button>
+                <button class="tab-btn" data-tab="trains">
+                    <i class="fas fa-train"></i> Trains
+                    <span class="tab-count" id="trainCount">0</span>
+                </button>
                 <button class="tab-btn" data-tab="itinerary">
                     <i class="fas fa-calendar-days"></i> Itinerary
                     <span class="tab-count" id="itineraryCount">0</span>
@@ -189,6 +218,7 @@
             <!-- Tab Content -->
             <div class="tab-content" id="flightsTab"></div>
             <div class="tab-content" id="hotelsTab" style="display:none;"></div>
+            <div class="tab-content" id="trainsTab" style="display:none;"></div>
             <div class="tab-content" id="itineraryTab" style="display:none;"></div>
         </section>
     </main>
@@ -203,4 +233,5 @@
 
     <script src="/js/app.js"></script>
 </body>
+
 </html>

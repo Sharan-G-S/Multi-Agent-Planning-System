@@ -18,6 +18,7 @@ from langgraph.graph import StateGraph, END
 from orchestrator.state import PlannerState
 from agents.flight_agent import search_flights
 from agents.hotel_agent import search_hotels
+from agents.train_agent import search_trains
 from agents.itinerary_agent import build_itinerary
 
 
@@ -121,6 +122,41 @@ def search_hotels_node(state: PlannerState) -> Dict[str, Any]:
         }
 
 
+def search_trains_node(state: PlannerState) -> Dict[str, Any]:
+    """Run the Indian Railways search tool and parse results."""
+    try:
+        query = json.dumps({
+            "origin": state.get("origin", "Delhi"),
+            "destination": state.get("destination", "Mumbai"),
+            "date": state.get("departure_date", "2025-06-15"),
+            "budget": state.get("budget", "moderate"),
+        })
+
+        raw_result = search_trains.run(query)
+        trains = json.loads(raw_result) if isinstance(raw_result, str) else raw_result
+
+        steps = list(state.get("steps_completed", []))
+        steps.append("search_trains")
+
+        return {
+            "train_results": trains,
+            "current_step": "search_trains",
+            "steps_completed": steps,
+            "status": "searching",
+        }
+    except Exception as e:
+        steps = list(state.get("steps_completed", []))
+        steps.append("search_trains")
+        errors = list(state.get("errors", []))
+        errors.append(f"Train search error: {str(e)}")
+        return {
+            "train_results": [],
+            "current_step": "search_trains",
+            "steps_completed": steps,
+            "errors": errors,
+        }
+
+
 def build_itinerary_node(state: PlannerState) -> Dict[str, Any]:
     """Run the itinerary builder tool and parse results."""
     try:
@@ -169,16 +205,18 @@ def compile_results(state: PlannerState) -> Dict[str, Any]:
     """Compile all agent outputs into a final summary."""
     flights = state.get("flight_results", [])
     hotels = state.get("hotel_results", [])
+    trains = state.get("train_results", [])
     itinerary = state.get("itinerary", [])
 
     best_flight = flights[0] if flights else None
     best_hotel = hotels[0] if hotels else None
+    best_train = trains[0] if trains else None
 
     summary_parts = [
         f"Travel Plan: {state.get('origin', 'NYC')} → {state.get('destination', 'London')}",
         f"Dates: {state.get('departure_date', 'TBD')} to {state.get('return_date', 'TBD')}",
         f"Budget: {state.get('budget', 'moderate').title()}",
-        f"Found {len(flights)} flight options, {len(hotels)} hotel options",
+        f"Found {len(flights)} flight options, {len(hotels)} hotel options, {len(trains)} train options",
         f"Generated {len(itinerary)}-day itinerary",
     ]
 
@@ -189,6 +227,10 @@ def compile_results(state: PlannerState) -> Dict[str, Any]:
     if best_hotel:
         summary_parts.append(
             f"Top hotel: {best_hotel.get('name', 'N/A')} at ${best_hotel.get('price_per_night_usd', 'N/A')}/night"
+        )
+    if best_train:
+        summary_parts.append(
+            f"Best train: {best_train.get('train_name', 'N/A')} at ₹{best_train.get('fare_inr', 'N/A')}"
         )
 
     steps = list(state.get("steps_completed", []))
@@ -236,6 +278,7 @@ def create_planning_graph() -> StateGraph:
     graph.add_node("collect_input", collect_input)
     graph.add_node("search_flights", search_flights_node)
     graph.add_node("search_hotels", search_hotels_node)
+    graph.add_node("search_trains", search_trains_node)
     graph.add_node("build_itinerary", build_itinerary_node)
     graph.add_node("compile_results", compile_results)
 
@@ -254,7 +297,8 @@ def create_planning_graph() -> StateGraph:
 
     # Sequential flow
     graph.add_edge("search_flights", "search_hotels")
-    graph.add_edge("search_hotels", "build_itinerary")
+    graph.add_edge("search_hotels", "search_trains")
+    graph.add_edge("search_trains", "build_itinerary")
     graph.add_edge("build_itinerary", "compile_results")
     graph.add_edge("compile_results", END)
 
@@ -284,6 +328,7 @@ def run_planning_pipeline(params: Dict[str, Any]) -> Dict[str, Any]:
         "special_requests": params.get("special_requests", ""),
         "flight_results": [],
         "hotel_results": [],
+        "train_results": [],
         "itinerary": [],
         "current_step": "",
         "steps_completed": [],
@@ -299,6 +344,7 @@ def run_planning_pipeline(params: Dict[str, Any]) -> Dict[str, Any]:
             "data": {
                 "flights": result.get("flight_results", []),
                 "hotels": result.get("hotel_results", []),
+                "trains": result.get("train_results", []),
                 "itinerary": result.get("itinerary", []),
                 "summary": result.get("summary", ""),
                 "steps_completed": result.get("steps_completed", []),

@@ -38,6 +38,61 @@ ATTRACTIONS_DB = {
         "Metropolitan Museum of Art", "Brooklyn Bridge", "Broadway Show",
         "Empire State Building", "High Line", "Grand Central Terminal",
     ],
+    "delhi": [
+        "Red Fort", "India Gate", "Qutub Minar",
+        "Humayun's Tomb", "Chandni Chowk Street Food Walk", "Lotus Temple",
+        "Jama Masjid", "Connaught Place", "Akshardham Temple",
+    ],
+    "mumbai": [
+        "Gateway of India", "Marine Drive Sunset Walk", "Elephanta Caves",
+        "Dhobi Ghat", "Chhatrapati Shivaji Terminus", "Colaba Causeway Shopping",
+        "Haji Ali Dargah", "Bandra-Worli Sea Link", "Juhu Beach",
+    ],
+    "jaipur": [
+        "Amber Fort", "Hawa Mahal", "City Palace",
+        "Jantar Mantar", "Nahargarh Fort Sunset", "Johari Bazaar",
+        "Jal Mahal", "Albert Hall Museum", "Birla Mandir",
+    ],
+    "goa": [
+        "Baga Beach", "Basilica of Bom Jesus", "Fort Aguada",
+        "Anjuna Flea Market", "Dudhsagar Falls", "Chapora Fort",
+        "Palolem Beach", "Spice Plantation Tour", "Latin Quarter of Fontainhas",
+    ],
+    "varanasi": [
+        "Ganga Aarti at Dashashwamedh Ghat", "Kashi Vishwanath Temple", "Boat Ride on the Ganges",
+        "Sarnath Buddhist Site", "Ramnagar Fort", "Manikarnika Ghat",
+        "BHU Campus Walk", "Assi Ghat Morning", "Silk Weaving Workshop",
+    ],
+    "bangalore": [
+        "Bangalore Palace", "Lalbagh Botanical Garden", "Cubbon Park",
+        "ISKCON Temple", "Bull Temple", "MG Road & Brigade Road",
+        "Bannerghatta National Park", "Tipu Sultan's Summer Palace", "UB City Mall",
+    ],
+    "bengaluru": [
+        "Bangalore Palace", "Lalbagh Botanical Garden", "Cubbon Park",
+        "ISKCON Temple", "Bull Temple", "MG Road & Brigade Road",
+        "Bannerghatta National Park", "Tipu Sultan's Summer Palace", "UB City Mall",
+    ],
+    "kochi": [
+        "Chinese Fishing Nets", "Fort Kochi Walk", "Mattancherry Palace",
+        "Jewish Synagogue", "Kerala Backwaters Cruise", "Kathakali Show",
+        "Marine Drive Kochi", "Willingdon Island", "Spice Markets",
+    ],
+    "agra": [
+        "Taj Mahal Sunrise", "Agra Fort", "Mehtab Bagh",
+        "Itimad-ud-Daulah (Baby Taj)", "Fatehpur Sikri", "Kinari Bazaar",
+        "Akbar's Tomb at Sikandra", "Taj Museum", "Mughal Heritage Walk",
+    ],
+    "hyderabad": [
+        "Charminar", "Golconda Fort", "Ramoji Film City",
+        "Hussain Sagar Lake", "Salar Jung Museum", "Laad Bazaar",
+        "Chowmahalla Palace", "Birla Mandir", "Paradise Biryani Experience",
+    ],
+    "udaipur": [
+        "City Palace", "Lake Pichola Boat Ride", "Jag Mandir",
+        "Saheliyon-ki-Bari", "Fateh Sagar Lake", "Bagore Ki Haveli",
+        "Sajjangarh Palace (Monsoon Palace)", "Vintage Car Museum", "Haldighati",
+    ],
     "default": [
         "City Center Walking Tour", "Local Food Market Visit",
         "Historical District Exploration", "Museum & Art Gallery Day",

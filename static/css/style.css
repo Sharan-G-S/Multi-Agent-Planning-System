@@ -46,7 +46,9 @@
 }
 
 /* ─── Reset & Base ─── */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -114,9 +116,19 @@ body {
 }
 
 @keyframes floatGlow {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(30px, -40px) scale(1.1); }
-    66% { transform: translate(-20px, 30px) scale(0.9); }
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(30px, -40px) scale(1.1);
+    }
+
+    66% {
+        transform: translate(-20px, 30px) scale(0.9);
+    }
 }
 
 /* ─── Header ─── */
@@ -193,9 +205,20 @@ body {
     background: var(--bg-glass);
 }
 
-.badge-crewai { color: var(--accent-teal); border-color: rgba(6, 214, 160, 0.25); }
-.badge-langgraph { color: var(--accent-purple); border-color: rgba(139, 92, 246, 0.25); }
-.badge-flask { color: var(--accent-blue); border-color: rgba(59, 130, 246, 0.25); }
+.badge-crewai {
+    color: var(--accent-teal);
+    border-color: rgba(6, 214, 160, 0.25);
+}
+
+.badge-langgraph {
+    color: var(--accent-purple);
+    border-color: rgba(139, 92, 246, 0.25);
+}
+
+.badge-flask {
+    color: var(--accent-blue);
+    border-color: rgba(59, 130, 246, 0.25);
+}
 
 /* ─── Main Content ─── */
 .main-content {
@@ -229,7 +252,7 @@ body {
 
 .agents-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
 }
 
@@ -289,6 +312,11 @@ body {
     z-index: 1;
 }
 
+.agent-icon.train-icon {
+    background: linear-gradient(135deg, #f59e0b, #ef4444, #f97316);
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.25);
+}
+
 .agent-info {
     flex: 1;
     position: relative;
@@ -322,10 +350,26 @@ body {
     flex-shrink: 0;
 }
 
-.status-dot.ready { background: var(--accent-teal); box-shadow: 0 0 8px rgba(6, 214, 160, 0.5); }
-.status-dot.working { background: var(--accent-amber); box-shadow: 0 0 8px rgba(245, 158, 11, 0.5); animation: blink 1s ease-in-out infinite; }
-.status-dot.complete { background: var(--accent-blue); box-shadow: 0 0 8px rgba(59, 130, 246, 0.5); }
-.status-dot.error { background: var(--accent-red); box-shadow: 0 0 8px rgba(239, 68, 68, 0.5); }
+.status-dot.ready {
+    background: var(--accent-teal);
+    box-shadow: 0 0 8px rgba(6, 214, 160, 0.5);
+}
+
+.status-dot.working {
+    background: var(--accent-amber);
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+    animation: blink 1s ease-in-out infinite;
+}
+
+.status-dot.complete {
+    background: var(--accent-blue);
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+}
+
+.status-dot.error {
+    background: var(--accent-red);
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+}
 
 .status-text {
     font-size: 0.7rem;
@@ -336,13 +380,27 @@ body {
 }
 
 @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.08); }
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.08);
+    }
 }
 
 @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
 }
 
 /* ─── Planning Form ─── */
@@ -457,7 +515,7 @@ body {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent);
     opacity: 0;
     transition: var(--transition-fast);
 }
@@ -503,7 +561,9 @@ body {
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* ─── Pipeline Visualization ─── */
@@ -883,6 +943,144 @@ body {
     font-weight: 500;
 }
 
+/* ─── Indian Railways Train Cards ─── */
+.train-card {
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 0.75rem;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto;
+    align-items: center;
+    gap: 1.5rem;
+    transition: var(--transition-smooth);
+    position: relative;
+}
+
+.train-card:hover {
+    border-color: var(--border-glass-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.train-card:first-child {
+    border-color: rgba(245, 158, 11, 0.3);
+    background: rgba(245, 158, 11, 0.03);
+}
+
+.train-card:first-child::after {
+    content: 'BEST FARE';
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--accent-amber);
+    letter-spacing: 0.06em;
+}
+
+.train-info h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.15rem;
+}
+
+.train-number {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.train-route {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.train-route .flight-time {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.train-route .route-stations {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.train-route .route-stations .line {
+    width: 50px;
+    height: 1px;
+    background: var(--accent-amber);
+}
+
+.train-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+}
+
+.train-meta-tag {
+    padding: 0.15rem 0.45rem;
+    border-radius: 10px;
+    font-size: 0.6rem;
+    font-weight: 500;
+}
+
+.train-meta-tag.class-tag {
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--accent-purple);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.train-meta-tag.avail-available {
+    background: rgba(6, 214, 160, 0.1);
+    color: var(--accent-teal);
+    border: 1px solid rgba(6, 214, 160, 0.2);
+}
+
+.train-meta-tag.avail-rac {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--accent-amber);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.train-meta-tag.avail-waitlist {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--accent-red);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.train-fare {
+    text-align: right;
+}
+
+.train-fare-inr {
+    font-size: 1.3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.train-fare-usd {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 0.15rem;
+}
+
+.train-fare-class {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-top: 0.1rem;
+}
+
 /* ─── Itinerary Cards ─── */
 .itinerary-day {
     background: var(--bg-glass);
@@ -933,7 +1131,7 @@ body {
     padding: 0.6rem 0;
 }
 
-.time-slot + .time-slot {
+.time-slot+.time-slot {
     border-top: 1px solid rgba(255, 255, 255, 0.03);
 }
 
@@ -1004,18 +1202,37 @@ body {
 
 /* ─── Animations ─── */
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ─── Responsive ─── */
@@ -1031,7 +1248,7 @@ body {
     }
 
     .agents-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .form-grid {
