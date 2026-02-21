@@ -88,6 +88,51 @@ ATTRACTIONS_DB = {
         "Hussain Sagar Lake", "Salar Jung Museum", "Laad Bazaar",
         "Chowmahalla Palace", "Birla Mandir", "Paradise Biryani Experience",
     ],
+    "coimbatore": [
+        "Marudamalai Temple", "VOC Park & Zoo", "Brookefields Mall",
+        "Monkey Falls", "Siruvani Waterfalls", "Kovai Kondattam",
+        "Gedee Car Museum", "Black Thunder Theme Park", "Vellingiri Temple Trek",
+    ],
+    "madurai": [
+        "Meenakshi Amman Temple", "Thirumalai Nayakkar Mahal", "Gandhi Memorial Museum",
+        "Vaigai Dam", "Alagar Kovil", "Banana Market Walk",
+        "Pudhu Mandapam Shopping", "Pazhamudhir Cholai", "Koodal Azhagar Temple",
+    ],
+    "ooty": [
+        "Ooty Botanical Gardens", "Nilgiri Mountain Railway", "Ooty Lake Boating",
+        "Doddabetta Peak", "Tea Factory & Museum", "Rose Garden",
+        "Pykara Waterfalls", "Avalanche Lake", "Ketti Valley View",
+    ],
+    "pondicherry": [
+        "Promenade Beach", "Auroville Matrimandir", "French Quarter Walk",
+        "Paradise Beach", "Aurobindo Ashram", "Pondicherry Museum",
+        "Chunnambar Boat House", "Serenity Beach", "Basilica of Sacred Heart",
+    ],
+    "puducherry": [
+        "Promenade Beach", "Auroville Matrimandir", "French Quarter Walk",
+        "Paradise Beach", "Aurobindo Ashram", "Pondicherry Museum",
+        "Chunnambar Boat House", "Serenity Beach", "Basilica of Sacred Heart",
+    ],
+    "trichy": [
+        "Rockfort Ucchi Pillayar Temple", "Sri Ranganathaswamy Temple", "Jambukeswarar Temple",
+        "Government Museum Trichy", "Kallanai Dam", "Mukkombu Boating",
+        "Upper Anaicut", "Geethanjali Gardens", "Viralimalai Peacock Sanctuary",
+    ],
+    "rameswaram": [
+        "Ramanathaswamy Temple", "Pamban Bridge", "Dhanushkodi Ghost Town",
+        "Abdul Kalam Museum", "Gandhamadhana Parvatham", "Agnitheertham Beach",
+        "Ariyaman Beach", "Ramar Padam", "Sri Sethupathiswamy Temple",
+    ],
+    "kanyakumari": [
+        "Vivekananda Rock Memorial", "Thiruvalluvar Statue", "Sunrise & Sunset Point",
+        "Padmanabhapuram Palace", "Thanumalayan Temple", "Wax Museum",
+        "Gandhi Memorial", "Our Lady of Ransom Church", "Kanyakumari Beach",
+    ],
+    "kodaikanal": [
+        "Kodaikanal Lake Boating", "Coaker's Walk", "Bryant Park",
+        "Pillar Rocks", "Bear Shola Falls", "Green Valley View",
+        "Silver Cascade Falls", "Pine Forest Walk", "Dolphin's Nose Viewpoint",
+    ],
     "udaipur": [
         "City Palace", "Lake Pichola Boat Ride", "Jag Mandir",
         "Saheliyon-ki-Bari", "Fateh Sagar Lake", "Bagore Ki Haveli",

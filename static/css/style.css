@@ -252,7 +252,7 @@ body {
 
 .agents-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 1rem;
 }
 
@@ -315,6 +315,11 @@ body {
 .agent-icon.train-icon {
     background: linear-gradient(135deg, #f59e0b, #ef4444, #f97316);
     box-shadow: 0 0 16px rgba(245, 158, 11, 0.25);
+}
+
+.agent-icon.road-icon {
+    background: linear-gradient(135deg, #10b981, #06d6a0, #34d399);
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.25);
 }
 
 .agent-info {
@@ -1078,6 +1083,155 @@ body {
 .train-fare-class {
     font-size: 0.65rem;
     color: var(--text-muted);
+    margin-top: 0.1rem;
+}
+
+/* ─── Road Travel Cards ─── */
+.road-card {
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 0.75rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    transition: var(--transition-smooth);
+    position: relative;
+}
+
+.road-card:hover {
+    border-color: var(--border-glass-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.road-card:first-child {
+    border-color: rgba(16, 185, 129, 0.3);
+    background: rgba(16, 185, 129, 0.03);
+}
+
+.road-card:first-child::after {
+    content: 'CHEAPEST';
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #10b981;
+    letter-spacing: 0.06em;
+}
+
+.road-mode-badge {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.road-mode-badge.mode-bus {
+    background: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+}
+
+.road-mode-badge.mode-cab {
+    background: rgba(59, 130, 246, 0.12);
+    color: #3b82f6;
+}
+
+.road-mode-badge.mode-self-drive {
+    background: rgba(168, 85, 247, 0.12);
+    color: #a855f7;
+}
+
+.road-operator h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.15rem;
+}
+
+.road-operator-type {
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 0.1rem 0.4rem;
+    border-radius: 6px;
+    display: inline-block;
+    margin-top: 0.2rem;
+}
+
+.road-operator-type.govt {
+    background: rgba(6, 214, 160, 0.1);
+    color: var(--accent-teal);
+    border: 1px solid rgba(6, 214, 160, 0.2);
+}
+
+.road-operator-type.private {
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--accent-purple);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.road-vehicle {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 0.15rem;
+}
+
+.road-route-info {
+    text-align: center;
+}
+
+.road-route-info .time-depart {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.road-route-info .route-detail {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-top: 0.15rem;
+}
+
+.road-amenities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+.road-amenities .amenity-tag {
+    padding: 0.1rem 0.35rem;
+    font-size: 0.55rem;
+}
+
+.road-fare {
+    text-align: right;
+}
+
+.road-fare-inr {
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #10b981, #06d6a0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.road-fare-usd {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 0.1rem;
+}
+
+.road-seats {
+    font-size: 0.65rem;
+    color: var(--accent-teal);
     margin-top: 0.1rem;
 }
 

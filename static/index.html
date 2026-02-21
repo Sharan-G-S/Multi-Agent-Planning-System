@@ -92,6 +92,17 @@
                         <span class="status-text">Ready</span>
                     </div>
                 </div>
+                <div class="agent-card" id="agent-road" data-agent="road">
+                    <div class="agent-icon road-icon"><i class="fas fa-bus"></i></div>
+                    <div class="agent-info">
+                        <h3>Road Travel</h3>
+                        <p>Buses, cabs & self-drive in Tamil Nadu</p>
+                    </div>
+                    <div class="agent-status">
+                        <span class="status-dot ready"></span>
+                        <span class="status-text">Ready</span>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -176,6 +187,11 @@
                     <span>Search Trains</span>
                 </div>
                 <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="pipeline-node" data-step="search_road">
+                    <div class="node-icon"><i class="fas fa-bus"></i></div>
+                    <span>Search Road</span>
+                </div>
+                <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
                 <div class="pipeline-node" data-step="build_itinerary">
                     <div class="node-icon"><i class="fas fa-map"></i></div>
                     <span>Build Itinerary</span>
@@ -209,6 +225,10 @@
                     <i class="fas fa-train"></i> Trains
                     <span class="tab-count" id="trainCount">0</span>
                 </button>
+                <button class="tab-btn" data-tab="road">
+                    <i class="fas fa-bus"></i> Road
+                    <span class="tab-count" id="roadCount">0</span>
+                </button>
                 <button class="tab-btn" data-tab="itinerary">
                     <i class="fas fa-calendar-days"></i> Itinerary
                     <span class="tab-count" id="itineraryCount">0</span>
@@ -219,6 +239,7 @@
             <div class="tab-content" id="flightsTab"></div>
             <div class="tab-content" id="hotelsTab" style="display:none;"></div>
             <div class="tab-content" id="trainsTab" style="display:none;"></div>
+            <div class="tab-content" id="roadTab" style="display:none;"></div>
             <div class="tab-content" id="itineraryTab" style="display:none;"></div>
         </section>
     </main>

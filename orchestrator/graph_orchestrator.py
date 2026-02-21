@@ -19,6 +19,7 @@ from orchestrator.state import PlannerState
 from agents.flight_agent import search_flights
 from agents.hotel_agent import search_hotels
 from agents.train_agent import search_trains
+from agents.road_agent import search_road_options
 from agents.itinerary_agent import build_itinerary
 
 
@@ -157,6 +158,41 @@ def search_trains_node(state: PlannerState) -> Dict[str, Any]:
         }
 
 
+def search_road_node(state: PlannerState) -> Dict[str, Any]:
+    """Run the road travel search tool and parse results."""
+    try:
+        query = json.dumps({
+            "origin": state.get("origin", "Coimbatore"),
+            "destination": state.get("destination", "Chennai"),
+            "date": state.get("departure_date", "2025-06-15"),
+            "budget": state.get("budget", "moderate"),
+        })
+
+        raw_result = search_road_options.run(query)
+        road_opts = json.loads(raw_result) if isinstance(raw_result, str) else raw_result
+
+        steps = list(state.get("steps_completed", []))
+        steps.append("search_road")
+
+        return {
+            "road_results": road_opts,
+            "current_step": "search_road",
+            "steps_completed": steps,
+            "status": "searching",
+        }
+    except Exception as e:
+        steps = list(state.get("steps_completed", []))
+        steps.append("search_road")
+        errors = list(state.get("errors", []))
+        errors.append(f"Road search error: {str(e)}")
+        return {
+            "road_results": [],
+            "current_step": "search_road",
+            "steps_completed": steps,
+            "errors": errors,
+        }
+
+
 def build_itinerary_node(state: PlannerState) -> Dict[str, Any]:
     """Run the itinerary builder tool and parse results."""
     try:
@@ -206,17 +242,19 @@ def compile_results(state: PlannerState) -> Dict[str, Any]:
     flights = state.get("flight_results", [])
     hotels = state.get("hotel_results", [])
     trains = state.get("train_results", [])
+    road_opts = state.get("road_results", [])
     itinerary = state.get("itinerary", [])
 
     best_flight = flights[0] if flights else None
     best_hotel = hotels[0] if hotels else None
     best_train = trains[0] if trains else None
+    best_road = road_opts[0] if road_opts else None
 
     summary_parts = [
         f"Travel Plan: {state.get('origin', 'NYC')} → {state.get('destination', 'London')}",
         f"Dates: {state.get('departure_date', 'TBD')} to {state.get('return_date', 'TBD')}",
         f"Budget: {state.get('budget', 'moderate').title()}",
-        f"Found {len(flights)} flight options, {len(hotels)} hotel options, {len(trains)} train options",
+        f"Found {len(flights)} flights, {len(hotels)} hotels, {len(trains)} trains, {len(road_opts)} road options",
         f"Generated {len(itinerary)}-day itinerary",
     ]
 
@@ -231,6 +269,10 @@ def compile_results(state: PlannerState) -> Dict[str, Any]:
     if best_train:
         summary_parts.append(
             f"Best train: {best_train.get('train_name', 'N/A')} at ₹{best_train.get('fare_inr', 'N/A')}"
+        )
+    if best_road:
+        summary_parts.append(
+            f"Best road: {best_road.get('operator', 'N/A')} ({best_road.get('mode', 'Bus')}) at ₹{best_road.get('fare_inr', 'N/A')}"
         )
 
     steps = list(state.get("steps_completed", []))
@@ -279,6 +321,7 @@ def create_planning_graph() -> StateGraph:
     graph.add_node("search_flights", search_flights_node)
     graph.add_node("search_hotels", search_hotels_node)
     graph.add_node("search_trains", search_trains_node)
+    graph.add_node("search_road", search_road_node)
     graph.add_node("build_itinerary", build_itinerary_node)
     graph.add_node("compile_results", compile_results)
 
@@ -298,7 +341,8 @@ def create_planning_graph() -> StateGraph:
     # Sequential flow
     graph.add_edge("search_flights", "search_hotels")
     graph.add_edge("search_hotels", "search_trains")
-    graph.add_edge("search_trains", "build_itinerary")
+    graph.add_edge("search_trains", "search_road")
+    graph.add_edge("search_road", "build_itinerary")
     graph.add_edge("build_itinerary", "compile_results")
     graph.add_edge("compile_results", END)
 
@@ -329,6 +373,7 @@ def run_planning_pipeline(params: Dict[str, Any]) -> Dict[str, Any]:
         "flight_results": [],
         "hotel_results": [],
         "train_results": [],
+        "road_results": [],
         "itinerary": [],
         "current_step": "",
         "steps_completed": [],
@@ -345,6 +390,7 @@ def run_planning_pipeline(params: Dict[str, Any]) -> Dict[str, Any]:
                 "flights": result.get("flight_results", []),
                 "hotels": result.get("hotel_results", []),
                 "trains": result.get("train_results", []),
+                "road_options": result.get("road_results", []),
                 "itinerary": result.get("itinerary", []),
                 "summary": result.get("summary", ""),
                 "steps_completed": result.get("steps_completed", []),

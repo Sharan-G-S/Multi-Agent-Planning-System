@@ -25,6 +25,7 @@ class PlannerState(TypedDict, total=False):
     flight_results: List[Dict[str, Any]]
     hotel_results: List[Dict[str, Any]]
     train_results: List[Dict[str, Any]]       # Indian Railways results
+    road_results: List[Dict[str, Any]]        # Road travel (bus/cab) results
     itinerary: List[Dict[str, Any]]
 
     # ─── Orchestration Metadata ───

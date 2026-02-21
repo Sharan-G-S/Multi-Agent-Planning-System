@@ -19,11 +19,13 @@ const tabBtns = document.querySelectorAll('.tab-btn');
 const flightsTab = document.getElementById('flightsTab');
 const hotelsTab = document.getElementById('hotelsTab');
 const trainsTab = document.getElementById('trainsTab');
+const roadTab = document.getElementById('roadTab');
 const itineraryTab = document.getElementById('itineraryTab');
 
 const flightCount = document.getElementById('flightCount');
 const hotelCount = document.getElementById('hotelCount');
 const trainCount = document.getElementById('trainCount');
+const roadCount = document.getElementById('roadCount');
 const itineraryCount = document.getElementById('itineraryCount');
 
 // Agent cards
@@ -32,6 +34,7 @@ const agentCards = {
     hotel: document.getElementById('agent-hotel'),
     itinerary: document.getElementById('agent-itinerary'),
     train: document.getElementById('agent-train'),
+    road: document.getElementById('agent-road'),
 };
 
 // Set default dates (departure: tomorrow, return: 5 days later)
@@ -58,6 +61,7 @@ tabBtns.forEach(btn => {
         flightsTab.style.display = tab === 'flights' ? 'block' : 'none';
         hotelsTab.style.display = tab === 'hotels' ? 'block' : 'none';
         trainsTab.style.display = tab === 'trains' ? 'block' : 'none';
+        roadTab.style.display = tab === 'road' ? 'block' : 'none';
         itineraryTab.style.display = tab === 'itinerary' ? 'block' : 'none';
     });
 });
@@ -100,11 +104,12 @@ function updatePipelineStep(step, status) {
 }
 
 async function animatePipeline(stepsCompleted) {
-    const steps = ['collect_input', 'search_flights', 'search_hotels', 'search_trains', 'build_itinerary', 'compile_results'];
+    const steps = ['collect_input', 'search_flights', 'search_hotels', 'search_trains', 'search_road', 'build_itinerary', 'compile_results'];
     const agentMapping = {
         'search_flights': 'flight',
         'search_hotels': 'hotel',
         'search_trains': 'train',
+        'search_road': 'road',
         'build_itinerary': 'itinerary',
     };
 
@@ -207,6 +212,7 @@ function renderResults(data, formData) {
     const flights = data.flights || [];
     const hotels = data.hotels || [];
     const trains = data.trains || [];
+    const roadOptions = data.road_options || [];
     const itinerary = data.itinerary || [];
 
     resultsSummary.innerHTML = `
@@ -225,6 +231,7 @@ function renderResults(data, formData) {
     flightCount.textContent = flights.length;
     hotelCount.textContent = hotels.length;
     trainCount.textContent = trains.length;
+    roadCount.textContent = roadOptions.length;
     itineraryCount.textContent = itinerary.length + (itinerary.length === 1 ? ' day' : ' days');
 
     // Render flights
@@ -236,6 +243,9 @@ function renderResults(data, formData) {
     // Render trains
     renderTrains(trains);
 
+    // Render road options
+    renderRoadOptions(roadOptions);
+
     // Render itinerary
     renderItinerary(itinerary);
 
@@ -245,6 +255,7 @@ function renderResults(data, formData) {
     flightsTab.style.display = 'block';
     hotelsTab.style.display = 'none';
     trainsTab.style.display = 'none';
+    roadTab.style.display = 'none';
     itineraryTab.style.display = 'none';
 }
 
@@ -357,6 +368,51 @@ function renderTrains(trains) {
     }).join('');
 }
 
+function renderRoadOptions(roadOptions) {
+    if (!roadOptions.length) {
+        roadTab.innerHTML = '<p style="color:var(--text-muted); padding:1rem;">No road travel data available. Try searching between Indian cities (e.g. Coimbatore to Chennai).</p>';
+        return;
+    }
+
+    roadTab.innerHTML = roadOptions.map(r => {
+        const mode = (r.mode || 'Bus').toLowerCase();
+        let modeIcon = 'fas fa-bus';
+        let modeCss = 'mode-bus';
+        if (mode === 'cab') { modeIcon = 'fas fa-taxi'; modeCss = 'mode-cab'; }
+        if (mode === 'self-drive') { modeIcon = 'fas fa-car'; modeCss = 'mode-self-drive'; }
+
+        const opType = (r.operator_type || '').toLowerCase();
+        const opTypeCss = opType === 'government' ? 'govt' : 'private';
+        const opTypeLabel = opType === 'government' ? 'Govt' : (mode === 'self-drive' ? 'Self-Drive' : (mode === 'cab' ? 'Cab' : 'Private'));
+
+        return `
+        <div class="road-card">
+            <div class="road-mode-badge ${modeCss}">
+                <i class="${modeIcon}"></i>
+            </div>
+            <div class="road-operator">
+                <h4>${r.operator || 'Unknown'}</h4>
+                <div class="road-vehicle">${r.vehicle_type || ''}</div>
+                <span class="road-operator-type ${opTypeCss}">${opTypeLabel}</span>
+            </div>
+            <div class="road-route-info">
+                <div class="time-depart">${r.departure_time || 'Flexible'}</div>
+                <div class="route-detail">${r.duration || ''}</div>
+                <div class="route-detail">${r.distance_km || ''}km &middot; ${r.origin || ''} → ${r.destination || ''}</div>
+            </div>
+            <div class="road-amenities">
+                ${(r.amenities || []).slice(0, 5).map(a => `<span class="amenity-tag">${a}</span>`).join('')}
+            </div>
+            <div class="road-fare">
+                <div class="road-fare-inr">&#8377;${(r.fare_inr || 0).toLocaleString('en-IN')}</div>
+                <div class="road-fare-usd">~$${(r.fare_usd || 0).toFixed(2)}</div>
+                <div class="road-seats"><i class="fas fa-chair"></i> ${r.seats_available || 0} seats</div>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
 function renderItinerary(itinerary) {
     if (!itinerary.length) {
         itineraryTab.innerHTML = '<p style="color:var(--text-muted); padding:1rem;">No itinerary data available.</p>';
@@ -412,5 +468,6 @@ function showError(message) {
     flightsTab.innerHTML = '';
     hotelsTab.innerHTML = '';
     trainsTab.innerHTML = '';
+    roadTab.innerHTML = '';
     itineraryTab.innerHTML = '';
 }
