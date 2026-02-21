@@ -471,3 +471,145 @@ function showError(message) {
     roadTab.innerHTML = '';
     itineraryTab.innerHTML = '';
 }
+
+// ─── Chat Widget ───
+const chatToggle = document.getElementById('chatToggle');
+const chatPanel = document.getElementById('chatPanel');
+const chatClose = document.getElementById('chatClose');
+const chatMessages = document.getElementById('chatMessages');
+const chatInput = document.getElementById('chatInput');
+const chatSend = document.getElementById('chatSend');
+const chatSuggestions = document.getElementById('chatSuggestions');
+const chatChips = document.querySelectorAll('.chat-chip');
+
+let chatOpen = false;
+
+chatToggle.addEventListener('click', () => {
+    chatOpen = true;
+    chatPanel.classList.add('open');
+    chatToggle.classList.add('active');
+    chatInput.focus();
+});
+
+chatClose.addEventListener('click', () => {
+    chatOpen = false;
+    chatPanel.classList.remove('open');
+    chatToggle.classList.remove('active');
+});
+
+// Send message on Enter
+chatInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendChatMessage();
+    }
+});
+
+chatSend.addEventListener('click', sendChatMessage);
+
+// Suggestion chips
+chatChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+        const msg = chip.dataset.msg;
+        chatInput.value = msg;
+        sendChatMessage();
+    });
+});
+
+function addChatMsg(type, html) {
+    const iconClass = type === 'bot' ? 'fa-robot' : 'fa-user';
+    const div = document.createElement('div');
+    div.className = `chat-msg ${type}`;
+    div.innerHTML = `
+        <div class="chat-msg-avatar"><i class="fas ${iconClass}"></i></div>
+        <div class="chat-msg-bubble">${html}</div>
+    `;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function showTyping() {
+    const div = document.createElement('div');
+    div.className = 'chat-msg bot';
+    div.id = 'chatTyping';
+    div.innerHTML = `
+        <div class="chat-msg-avatar"><i class="fas fa-robot"></i></div>
+        <div class="chat-msg-bubble">
+            <div class="chat-typing"><span></span><span></span><span></span></div>
+            <div style="font-size:0.65rem; color:var(--text-muted); margin-top:0.2rem;">Agents working...</div>
+        </div>
+    `;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function removeTyping() {
+    const t = document.getElementById('chatTyping');
+    if (t) t.remove();
+}
+
+function formatReply(text) {
+    // Simple markdown-like formatting
+    return text
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/\n/g, '<br>')
+        .replace(/₹/g, '&#8377;');
+}
+
+async function sendChatMessage() {
+    const msg = chatInput.value.trim();
+    if (!msg) return;
+
+    // Add user message
+    addChatMsg('user', msg);
+    chatInput.value = '';
+    chatSend.disabled = true;
+
+    // Hide suggestions after first use
+    chatSuggestions.style.display = 'none';
+
+    // Show typing indicator
+    showTyping();
+
+    try {
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: msg }),
+        });
+
+        const result = await response.json();
+        removeTyping();
+
+        if (result.reply) {
+            addChatMsg('bot', formatReply(result.reply));
+        }
+
+        // If pipeline returned results, render them in the main UI too
+        if (result.has_results && result.data && result.params) {
+            // Fill form with parsed params
+            document.getElementById('origin').value = result.params.origin || '';
+            document.getElementById('destination').value = result.params.destination || '';
+            document.getElementById('departure_date').value = result.params.departure_date || '';
+            document.getElementById('return_date').value = result.params.return_date || '';
+            document.getElementById('budget').value = result.params.budget || 'moderate';
+            document.getElementById('travelers').value = result.params.travelers || 2;
+            document.getElementById('interests').value = result.params.interests || '';
+
+            // Show pipeline & results
+            resetAllAgents();
+            resetPipeline();
+            showPipeline();
+            await animatePipeline();
+            renderResults(result.data, result.params);
+        }
+
+    } catch (err) {
+        removeTyping();
+        addChatMsg('bot', 'Sorry, I couldn\'t connect to the server. Please make sure it\'s running.');
+    } finally {
+        chatSend.disabled = false;
+        chatInput.focus();
+    }
+}

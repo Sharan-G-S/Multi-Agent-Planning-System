@@ -244,6 +244,53 @@
         </section>
     </main>
 
+    <!-- Chat Widget -->
+    <div class="chat-toggle" id="chatToggle" title="Chat with AI Travel Agent">
+        <i class="fas fa-comments"></i>
+    </div>
+
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <div class="chat-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <h3>AI Travel Assistant</h3>
+                    <span class="chat-status-text"><i class="fas fa-circle"
+                            style="font-size:0.4rem; color:#10b981;"></i> 5 Agents Online</span>
+                </div>
+            </div>
+            <button class="chat-close" id="chatClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-msg bot">
+                <div class="chat-msg-avatar"><i class="fas fa-robot"></i></div>
+                <div class="chat-msg-bubble">
+                    Hello! I'm your AI Travel Planner. I coordinate <strong>5 specialized agents</strong> to plan trips
+                    for you.<br><br>
+                    Just tell me where you'd like to go — I'll find flights, trains, buses, hotels and build an
+                    itinerary!
+                </div>
+            </div>
+        </div>
+        <div class="chat-suggestions" id="chatSuggestions">
+            <button class="chat-chip" data-msg="Find buses from Coimbatore to Chennai"><i class="fas fa-bus"></i> CBE →
+                Chennai buses</button>
+            <button class="chat-chip" data-msg="Plan a trip from Coimbatore to Ooty for 3 days"><i
+                    class="fas fa-mountain"></i> CBE → Ooty trip</button>
+            <button class="chat-chip" data-msg="Trains from Delhi to Mumbai next week"><i class="fas fa-train"></i>
+                Delhi → Mumbai trains</button>
+            <button class="chat-chip" data-msg="Family trip from Bangalore to Goa for 5 days budget"><i
+                    class="fas fa-umbrella-beach"></i> BLR → Goa family</button>
+        </div>
+        <div class="chat-input-bar">
+            <input type="text" class="chat-input" id="chatInput"
+                placeholder="Ask anything... e.g. 'Coimbatore to Ooty this weekend'" autocomplete="off">
+            <button class="chat-send" id="chatSend"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
