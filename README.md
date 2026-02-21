@@ -157,4 +157,4 @@ Multi-Agent-Planning-System/
 
 ---
 
-<p align="center">Made with 💚 by Sharan G S</p>
+<p align="center">Made with 💚 from Sharan G S</p>
