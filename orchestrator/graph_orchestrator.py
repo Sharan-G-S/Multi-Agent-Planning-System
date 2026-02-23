@@ -258,7 +258,7 @@ def compile_results(state: PlannerState) -> Dict[str, Any]:
         f"Generated {len(itinerary)}-day itinerary",
     ]
 
-    if best_flight:
+    if best_flight and best_flight.get('airline') != 'No Airport':
         summary_parts.append(
             f"Best flight: {best_flight.get('airline', 'N/A')} at ₹{best_flight.get('price_inr', 'N/A')}"
         )
@@ -266,7 +266,7 @@ def compile_results(state: PlannerState) -> Dict[str, Any]:
         summary_parts.append(
             f"Top hotel: {best_hotel.get('name', 'N/A')} at ₹{best_hotel.get('price_per_night_inr', 'N/A')}/night"
         )
-    if best_train:
+    if best_train and best_train.get('train_name') != 'No Direct Trains':
         summary_parts.append(
             f"Best train: {best_train.get('train_name', 'N/A')} at ₹{best_train.get('fare_inr', 'N/A')}"
         )

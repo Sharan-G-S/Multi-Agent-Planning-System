@@ -265,6 +265,22 @@ function renderFlights(flights) {
         return;
     }
 
+    // Check if the first result is a "No Airport" info card
+    if (flights.length === 1 && flights[0].airline === 'No Airport') {
+        const f = flights[0];
+        flightsTab.innerHTML = `
+        <div class="flight-card" style="grid-template-columns:1fr; text-align:center; padding:2rem;">
+            <div>
+                <div style="font-size:2rem; margin-bottom:0.75rem; color:var(--accent-amber);"><i class="fas fa-plane-slash"></i></div>
+                <h4 style="margin-bottom:0.5rem; font-size:1rem;">No Airport at This Destination</h4>
+                <p style="color:var(--text-secondary); font-size:0.85rem; line-height:1.5; max-width:500px; margin:0 auto;">
+                    ${f.note || 'This city does not have an airport.'}
+                </p>
+            </div>
+        </div>`;
+        return;
+    }
+
     flightsTab.innerHTML = flights.map(f => `
         <div class="flight-card">
             <div class="flight-airline">

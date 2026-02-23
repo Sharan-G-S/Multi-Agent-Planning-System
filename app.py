@@ -344,14 +344,20 @@ def format_chat_response(data, params):
     lines.append(f"Here's your travel plan for **{params['origin']} to {params['destination']}** ({params['departure_date']} to {params['return_date']}):\n")
 
     if flights:
-        best_f = min(flights, key=lambda x: x.get("price_inr", 999999))
-        lines.append(f"**Flights** — {len(flights)} options found")
-        lines.append(f"  Best: {best_f['airline']} at \u20b9{best_f['price_inr']:,.0f}/person\n")
+        if len(flights) == 1 and flights[0].get('airline') == 'No Airport':
+            lines.append(f"**Flights** — {flights[0].get('note', 'No airport at this destination')}\n")
+        else:
+            best_f = min(flights, key=lambda x: x.get("price_inr", 999999))
+            lines.append(f"**Flights** — {len(flights)} options found")
+            lines.append(f"  Best: {best_f['airline']} at \u20b9{best_f['price_inr']:,.0f}/person\n")
 
     if trains:
-        best_t = min(trains, key=lambda x: x.get("fare_inr", 99999))
-        lines.append(f"**Trains** — {len(trains)} options found")
-        lines.append(f"  Best: {best_t['train_name']} ({best_t.get('class', '')}) at \u20b9{best_t['fare_inr']:,.0f}\n")
+        if len(trains) == 1 and trains[0].get('train_name') == 'No Direct Trains':
+            lines.append(f"**Trains** — {trains[0].get('note', 'No direct trains on this route')}\n")
+        else:
+            best_t = min(trains, key=lambda x: x.get("fare_inr", 99999))
+            lines.append(f"**Trains** — {len(trains)} options found")
+            lines.append(f"  Best: {best_t['train_name']} ({best_t.get('class', '')}) at \u20b9{best_t['fare_inr']:,.0f}\n")
 
     if road_options:
         best_r = min(road_options, key=lambda x: x.get("fare_inr", 99999))

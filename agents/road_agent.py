@@ -278,20 +278,63 @@ def _generate_road_options(origin: str, destination: str, date: str, budget: str
         })
 
     # ─── Generate cab/ride options ───
+    # Vehicle segments with per-km rate and base charge
+    CAB_VEHICLES = {
+        "budget": [
+            {"name": "Hatchback (Maruti WagonR)", "rate_per_km": 8, "base": 300, "seats": 3, "segment": "Hatchback"},
+            {"name": "Sedan (Maruti Swift Dzire)", "rate_per_km": 10, "base": 400, "seats": 3, "segment": "Sedan"},
+            {"name": "Sedan (Honda Amaze)", "rate_per_km": 11, "base": 450, "seats": 3, "segment": "Sedan"},
+        ],
+        "moderate": [
+            {"name": "Sedan (Maruti Swift Dzire)", "rate_per_km": 10, "base": 400, "seats": 3, "segment": "Sedan"},
+            {"name": "Sedan (Honda Amaze)", "rate_per_km": 11, "base": 450, "seats": 3, "segment": "Sedan"},
+            {"name": "Sedan (Hyundai Aura)", "rate_per_km": 11, "base": 450, "seats": 3, "segment": "Sedan"},
+            {"name": "SUV (Toyota Innova)", "rate_per_km": 14, "base": 600, "seats": 6, "segment": "SUV"},
+        ],
+        "luxury": [
+            {"name": "SUV (Toyota Innova Crysta)", "rate_per_km": 16, "base": 800, "seats": 6, "segment": "SUV"},
+            {"name": "SUV (Mahindra XUV700)", "rate_per_km": 15, "base": 750, "seats": 6, "segment": "SUV"},
+            {"name": "Premium Sedan (Honda City)", "rate_per_km": 14, "base": 700, "seats": 3, "segment": "Premium Sedan"},
+            {"name": "Luxury SUV (Toyota Fortuner)", "rate_per_km": 20, "base": 1000, "seats": 6, "segment": "Luxury SUV"},
+        ],
+    }
+
+    SELF_DRIVE_VEHICLES = {
+        "budget": [
+            {"name": "Maruti WagonR", "rate_per_km": 4, "base": 800, "seats": 3},
+            {"name": "Maruti Baleno", "rate_per_km": 5, "base": 1000, "seats": 3},
+        ],
+        "moderate": [
+            {"name": "Hyundai i20", "rate_per_km": 5, "base": 1200, "seats": 3},
+            {"name": "Tata Nexon", "rate_per_km": 6, "base": 1400, "seats": 4},
+            {"name": "Maruti Swift Dzire", "rate_per_km": 5, "base": 1100, "seats": 3},
+        ],
+        "luxury": [
+            {"name": "Tata Nexon", "rate_per_km": 6, "base": 1400, "seats": 4},
+            {"name": "Hyundai Creta", "rate_per_km": 8, "base": 1800, "seats": 4},
+            {"name": "MG Hector", "rate_per_km": 9, "base": 2000, "seats": 5},
+        ],
+    }
+
+    cab_vehicle_pool = CAB_VEHICLES.get(budget_key, CAB_VEHICLES["moderate"])
+    self_drive_pool = SELF_DRIVE_VEHICLES.get(budget_key, SELF_DRIVE_VEHICLES["moderate"])
+
     num_cabs = random.randint(2, 3)
     for _ in range(num_cabs):
         provider = random.choice(CAB_PROVIDERS)
 
         if provider["type"] == "Self-Drive":
-            fare_inr = round(distance * 5.0 + random.uniform(500, 1500), 0)
-            vehicle = random.choice(["Swift Dzire", "Hyundai i20", "Tata Nexon", "Maruti Baleno"])
+            vehicle_info = random.choice(self_drive_pool)
+            fare_inr = round(distance * vehicle_info["rate_per_km"] + vehicle_info["base"] + random.uniform(-100, 200), 0)
+            vehicle = vehicle_info["name"]
+            seats = vehicle_info["seats"]
         else:
-            fare_inr = round(distance * CAB_BASE_FARE_PER_KM + random.uniform(200, 800), 0)
-            vehicle = random.choice([
-                "Sedan (Swift Dzire)", "SUV (Toyota Innova)",
-                "Hatchback (WagonR)", "Premium (Toyota Innova Crysta)",
-                "Sedan (Honda Amaze)", "SUV (Mahindra XUV700)",
-            ])
+            vehicle_info = random.choice(cab_vehicle_pool)
+            fare_inr = round(distance * vehicle_info["rate_per_km"] + vehicle_info["base"] + random.uniform(-100, 300), 0)
+            vehicle = vehicle_info["name"]
+            seats = vehicle_info["seats"]
+
+        fare_inr = max(fare_inr, 500)
 
         speed = random.choice([50, 60, 70, 80])
         duration_hrs = distance / speed
@@ -311,8 +354,7 @@ def _generate_road_options(origin: str, destination: str, date: str, budget: str
             "duration": f"{hours}h {mins}m (approx)",
             "distance_km": distance,
             "fare_inr": fare_inr,
-
-            "seats_available": 4 if "SUV" in vehicle else 3,
+            "seats_available": seats,
             "amenities": _get_cab_amenities(provider["type"]),
             "rating": round(random.uniform(4.0, 4.9), 1),
             "boarding_point": "Door pickup",

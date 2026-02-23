@@ -17,14 +17,18 @@ except ImportError:
 
 
 HOTEL_CHAINS = [
-    {"name": "The Grand Horizon", "type": "Luxury Hotel", "stars": 5},
-    {"name": "Urban Nest Suites", "type": "Boutique Hotel", "stars": 4},
-    {"name": "Coastal Breeze Resort", "type": "Resort", "stars": 5},
-    {"name": "City Central Inn", "type": "Business Hotel", "stars": 3},
-    {"name": "Heritage Manor", "type": "Heritage Hotel", "stars": 4},
-    {"name": "SkyLoft Apartments", "type": "Serviced Apartment", "stars": 4},
-    {"name": "Nomad's Haven Hostel", "type": "Hostel", "stars": 2},
-    {"name": "Riverside Boutique", "type": "Boutique Hotel", "stars": 4},
+    {"name": "Taj", "type": "Luxury Hotel", "stars": 5},
+    {"name": "ITC Hotels", "type": "Luxury Hotel", "stars": 5},
+    {"name": "The Leela", "type": "Luxury Hotel", "stars": 5},
+    {"name": "Lemon Tree", "type": "Business Hotel", "stars": 4},
+    {"name": "FabHotel", "type": "Budget Hotel", "stars": 3},
+    {"name": "Treebo", "type": "Budget Hotel", "stars": 3},
+    {"name": "OYO Rooms", "type": "Budget Hotel", "stars": 2},
+    {"name": "Radisson", "type": "Premium Hotel", "stars": 4},
+    {"name": "Novotel", "type": "Business Hotel", "stars": 4},
+    {"name": "The Residency", "type": "Business Hotel", "stars": 3},
+    {"name": "Fortune Hotel", "type": "Business Hotel", "stars": 4},
+    {"name": "Zostel", "type": "Hostel", "stars": 2},
 ]
 
 AMENITIES_POOL = [
