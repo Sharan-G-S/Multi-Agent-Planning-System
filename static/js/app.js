@@ -327,11 +327,29 @@ function renderTrains(trains) {
         return;
     }
 
+    // Check if the first result is a "No Direct Trains" info card
+    if (trains.length === 1 && trains[0].train_name === 'No Direct Trains') {
+        const t = trains[0];
+        trainsTab.innerHTML = `
+        <div class="train-card" style="grid-template-columns:1fr; text-align:center; padding:2rem;">
+            <div>
+                <div style="font-size:2rem; margin-bottom:0.75rem; color:var(--accent-amber);"><i class="fas fa-exclamation-triangle"></i></div>
+                <h4 style="margin-bottom:0.5rem; font-size:1rem;">No Direct Train Service</h4>
+                <p style="color:var(--text-secondary); font-size:0.85rem; line-height:1.5; max-width:500px; margin:0 auto;">
+                    ${t.note || 'No direct trains available on this route.'}
+                </p>
+            </div>
+        </div>`;
+        return;
+    }
+
     trainsTab.innerHTML = trains.map(t => {
         const availClass = (t.availability || '').toLowerCase().replace(' ', '');
         let availCss = 'avail-available';
         if (availClass === 'rac') availCss = 'avail-rac';
         if (availClass === 'waitlist') availCss = 'avail-waitlist';
+
+        const noteHtml = t.note ? `<div style="grid-column:1/-1; font-size:0.75rem; color:var(--accent-teal); padding-top:0.5rem; border-top:1px solid var(--border-glass);"><i class="fas fa-info-circle"></i> ${t.note}</div>` : '';
 
         return `
         <div class="train-card">
@@ -362,6 +380,7 @@ function renderTrains(trains) {
                 <div class="train-fare-inr">&#8377;${(t.fare_inr || 0).toLocaleString('en-IN')}</div>
                 <div class="train-fare-class">${t.class || ''}</div>
             </div>
+            ${noteHtml}
         </div>
         `;
     }).join('');
