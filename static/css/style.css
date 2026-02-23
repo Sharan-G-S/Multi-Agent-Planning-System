@@ -1074,12 +1074,6 @@ body {
     background-clip: text;
 }
 
-.train-fare-usd {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    margin-top: 0.15rem;
-}
-
 .train-fare-class {
     font-size: 0.65rem;
     color: var(--text-muted);
@@ -1221,12 +1215,6 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-}
-
-.road-fare-usd {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    margin-top: 0.1rem;
 }
 
 .road-seats {

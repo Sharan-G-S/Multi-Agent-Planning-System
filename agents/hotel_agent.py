@@ -38,12 +38,12 @@ AMENITIES_POOL = [
 def _generate_mock_hotels(destination: str, checkin: str, checkout: str, budget: str) -> list:
     """Generate realistic mock hotel data."""
     budget_map = {
-        "budget": (40, 120, [2, 3]),
-        "moderate": (100, 300, [3, 4]),
-        "luxury": (250, 800, [4, 5]),
+        "budget": (3000, 10000, [2, 3]),
+        "moderate": (8000, 25000, [3, 4]),
+        "luxury": (20000, 65000, [4, 5]),
     }
     price_range_min, price_range_max, star_range = budget_map.get(
-        budget.lower(), (80, 350, [3, 4])
+        budget.lower(), (6500, 29000, [3, 4])
     )
 
     hotels = []
@@ -61,8 +61,8 @@ def _generate_mock_hotels(destination: str, checkin: str, checkout: str, budget:
             "type": hotel_template["type"],
             "stars": stars,
             "location": f"Downtown {destination}",
-            "price_per_night_usd": price,
-            "total_price_usd": round(price * 3, 2),
+            "price_per_night_inr": price,
+            "total_price_inr": round(price * 3, 2),
             "checkin": checkin,
             "checkout": checkout,
             "rating": rating,
@@ -73,7 +73,7 @@ def _generate_mock_hotels(destination: str, checkin: str, checkout: str, budget:
             "distance_to_center": f"{round(random.uniform(0.2, 5.0), 1)} km",
         })
 
-    hotels.sort(key=lambda x: x["price_per_night_usd"])
+    hotels.sort(key=lambda x: x["price_per_night_inr"])
     return hotels
 
 

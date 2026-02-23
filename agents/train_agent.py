@@ -190,7 +190,6 @@ def _generate_mock_trains(origin: str, destination: str, date: str, budget: str)
             "class": train_class["name"],
             "class_code": train_class["code"],
             "fare_inr": fare_inr,
-            "fare_usd": round(fare_inr / 83.5, 2),  # Approx INR to USD
             "availability": random.choice(avail_statuses),
             "pantry": template["pantry"],
             "runs_on": random.choice(["Daily", "Mon/Wed/Fri", "Tue/Thu/Sat", "Daily except Sun"]),

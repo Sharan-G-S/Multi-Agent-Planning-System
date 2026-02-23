@@ -260,11 +260,11 @@ def compile_results(state: PlannerState) -> Dict[str, Any]:
 
     if best_flight:
         summary_parts.append(
-            f"Best flight: {best_flight.get('airline', 'N/A')} at ${best_flight.get('price_usd', 'N/A')}"
+            f"Best flight: {best_flight.get('airline', 'N/A')} at ₹{best_flight.get('price_inr', 'N/A')}"
         )
     if best_hotel:
         summary_parts.append(
-            f"Top hotel: {best_hotel.get('name', 'N/A')} at ${best_hotel.get('price_per_night_usd', 'N/A')}/night"
+            f"Top hotel: {best_hotel.get('name', 'N/A')} at ₹{best_hotel.get('price_per_night_inr', 'N/A')}/night"
         )
     if best_train:
         summary_parts.append(

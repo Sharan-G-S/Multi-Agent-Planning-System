@@ -268,7 +268,7 @@ def _generate_road_options(origin: str, destination: str, date: str, budget: str
             "duration": f"{hours}h {mins}m",
             "distance_km": distance,
             "fare_inr": fare_inr,
-            "fare_usd": round(fare_inr / 83.5, 2),
+
             "seats_available": seats_avail,
             "amenities": _get_bus_amenities(bus_type["type"], operator["type"]),
             "rating": round(random.uniform(3.5, 4.8), 1),
@@ -311,7 +311,7 @@ def _generate_road_options(origin: str, destination: str, date: str, budget: str
             "duration": f"{hours}h {mins}m (approx)",
             "distance_km": distance,
             "fare_inr": fare_inr,
-            "fare_usd": round(fare_inr / 83.5, 2),
+
             "seats_available": 4 if "SUV" in vehicle else 3,
             "amenities": _get_cab_amenities(provider["type"]),
             "rating": round(random.uniform(4.0, 4.9), 1),

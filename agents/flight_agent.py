@@ -29,8 +29,8 @@ AIRLINES = [
 
 def _generate_mock_flights(origin: str, destination: str, date: str, budget: str) -> list:
     """Generate realistic mock flight data."""
-    budget_map = {"budget": (150, 400), "moderate": (300, 700), "luxury": (600, 1500)}
-    price_range = budget_map.get(budget.lower(), (200, 800))
+    budget_map = {"budget": (12000, 33000), "moderate": (25000, 58000), "luxury": (50000, 125000)}
+    price_range = budget_map.get(budget.lower(), (16000, 66000))
 
     flights = []
     for _ in range(random.randint(3, 6)):
@@ -55,12 +55,12 @@ def _generate_mock_flights(origin: str, destination: str, date: str, budget: str
             "duration": f"{duration_hours}h {duration_mins}m",
             "stops": stops,
             "stop_type": "Non-stop" if stops == 0 else f"{stops} stop{'s' if stops > 1 else ''}",
-            "price_usd": round(price, 2),
+            "price_inr": round(price, 2),
             "class": "Economy" if budget.lower() == "budget" else "Business" if budget.lower() == "luxury" else "Premium Economy",
             "date": date,
         })
 
-    flights.sort(key=lambda x: x["price_usd"])
+    flights.sort(key=lambda x: x["price_inr"])
     return flights
 
 

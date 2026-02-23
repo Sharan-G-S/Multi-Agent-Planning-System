@@ -344,9 +344,9 @@ def format_chat_response(data, params):
     lines.append(f"Here's your travel plan for **{params['origin']} to {params['destination']}** ({params['departure_date']} to {params['return_date']}):\n")
 
     if flights:
-        best_f = min(flights, key=lambda x: x.get("price_usd", 9999))
+        best_f = min(flights, key=lambda x: x.get("price_inr", 999999))
         lines.append(f"**Flights** — {len(flights)} options found")
-        lines.append(f"  Best: {best_f['airline']} at ${best_f['price_usd']:.2f}/person\n")
+        lines.append(f"  Best: {best_f['airline']} at \u20b9{best_f['price_inr']:,.0f}/person\n")
 
     if trains:
         best_t = min(trains, key=lambda x: x.get("fare_inr", 99999))
@@ -359,9 +359,9 @@ def format_chat_response(data, params):
         lines.append(f"  Best: {best_r['operator']} ({best_r['mode']}) at \u20b9{best_r['fare_inr']:,.0f}\n")
 
     if hotels:
-        best_h = min(hotels, key=lambda x: x.get("price_per_night_usd", 9999))
+        best_h = min(hotels, key=lambda x: x.get("price_per_night_inr", 999999))
         lines.append(f"**Hotels** — {len(hotels)} options found")
-        lines.append(f"  Best: {best_h['name']} at ${best_h['price_per_night_usd']:.2f}/night\n")
+        lines.append(f"  Best: {best_h['name']} at \u20b9{best_h['price_per_night_inr']:,.0f}/night\n")
 
     if itinerary:
         lines.append(f"**Itinerary** — {len(itinerary)}-day plan generated with local attractions\n")

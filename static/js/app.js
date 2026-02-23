@@ -284,7 +284,7 @@ function renderFlights(flights) {
             </div>
             <div></div>
             <div class="flight-price">
-                <div class="flight-price-amount">$${(f.price_usd || 0).toFixed(2)}</div>
+                <div class="flight-price-amount">&#8377;${(f.price_inr || 0).toLocaleString('en-IN')}</div>
                 <div class="flight-class">per person</div>
             </div>
         </div>
@@ -312,7 +312,7 @@ function renderHotels(hotels) {
                 </div>
             </div>
             <div class="hotel-price">
-                <div class="hotel-price-amount">$${(h.price_per_night_usd || 0).toFixed(2)}</div>
+                <div class="hotel-price-amount">&#8377;${(h.price_per_night_inr || 0).toLocaleString('en-IN')}</div>
                 <div class="hotel-price-label">per night</div>
                 ${h.breakfast_included ? '<div style="font-size:0.7rem; color:var(--accent-teal); margin-top:0.15rem;"><i class="fas fa-mug-hot"></i> Breakfast included</div>' : ''}
                 <div class="hotel-cancel">${h.cancellation || ''}</div>
@@ -360,7 +360,6 @@ function renderTrains(trains) {
             </div>
             <div class="train-fare">
                 <div class="train-fare-inr">&#8377;${(t.fare_inr || 0).toLocaleString('en-IN')}</div>
-                <div class="train-fare-usd">~$${(t.fare_usd || 0).toFixed(2)} USD</div>
                 <div class="train-fare-class">${t.class || ''}</div>
             </div>
         </div>
@@ -405,7 +404,6 @@ function renderRoadOptions(roadOptions) {
             </div>
             <div class="road-fare">
                 <div class="road-fare-inr">&#8377;${(r.fare_inr || 0).toLocaleString('en-IN')}</div>
-                <div class="road-fare-usd">~$${(r.fare_usd || 0).toFixed(2)}</div>
                 <div class="road-seats"><i class="fas fa-chair"></i> ${r.seats_available || 0} seats</div>
             </div>
         </div>
