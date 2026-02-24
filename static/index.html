@@ -9,13 +9,19 @@
         content="Intelligent AI-powered travel planning with multi-agent orchestration for flights, hotels, and itineraries.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
+
     <!-- Animated Background -->
     <div class="bg-grid"></div>
     <div class="bg-glow bg-glow-1"></div>
@@ -42,10 +48,52 @@
         </div>
     </header>
 
+    <!-- Hero Section -->
+    <section class="hero" id="heroSection">
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="hero-badge">
+                    <i class="fas fa-sparkles"></i>
+                    <span>Powered by 5 Specialized AI Agents</span>
+                </div>
+                <h2 class="hero-title">
+                    Plan Your <span class="gradient-text">Perfect Trip</span><br>
+                    in Seconds
+                </h2>
+                <p class="hero-subtitle">
+                    Our multi-agent AI system coordinates flights, trains, buses, hotels & itineraries
+                    to craft your dream travel plan — all at once.
+                </p>
+                <a href="#planningForm" class="hero-cta">
+                    <i class="fas fa-wand-magic-sparkles"></i> Start Planning
+                </a>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-orbit">
+                    <div class="orbit-ring orbit-ring-1"></div>
+                    <div class="orbit-ring orbit-ring-2"></div>
+                    <div class="orbit-ring orbit-ring-3"></div>
+                    <div class="orbit-center">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                    <div class="orbit-icon orbit-icon-1"><i class="fas fa-plane"></i></div>
+                    <div class="orbit-icon orbit-icon-2"><i class="fas fa-train"></i></div>
+                    <div class="orbit-icon orbit-icon-3"><i class="fas fa-hotel"></i></div>
+                    <div class="orbit-icon orbit-icon-4"><i class="fas fa-bus"></i></div>
+                    <div class="orbit-icon orbit-icon-5"><i class="fas fa-map-marked-alt"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll-hint" id="scrollHint">
+            <span>Explore</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
     <!-- Main Content -->
     <main class="main-content">
         <!-- Agent Status Panel -->
-        <section class="agents-panel" id="agentsPanel">
+        <section class="agents-panel" id="agentsPanel" data-animate="fadeInUp">
             <h2 class="section-title"><i class="fas fa-robot"></i> Specialized Agents</h2>
             <div class="agents-grid">
                 <div class="agent-card" id="agent-flight" data-agent="flight">
@@ -107,29 +155,48 @@
         </section>
 
         <!-- Planning Form -->
-        <section class="planning-form" id="planningForm">
+        <section class="planning-form" id="planningForm" data-animate="fadeInUp">
             <h2 class="section-title"><i class="fas fa-compass"></i> Plan Your Journey</h2>
+
+            <!-- Step Indicators -->
+            <div class="step-indicators">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <span>Route</span>
+                </div>
+                <div class="step-line active"></div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <span>Details</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <span>Preferences</span>
+                </div>
+            </div>
+
             <form id="travelForm">
                 <div class="form-grid">
-                    <div class="form-group">
+                    <div class="form-group" data-step-group="1">
                         <label for="origin"><i class="fas fa-plane-departure"></i> From</label>
-                        <input type="text" id="origin" name="origin" placeholder="e.g. New York, NYC" value="New York"
-                            required>
+                        <input type="text" id="origin" name="origin" placeholder="e.g. Coimbatore, Delhi"
+                            value="Coimbatore" required>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" data-step-group="1">
                         <label for="destination"><i class="fas fa-plane-arrival"></i> To</label>
-                        <input type="text" id="destination" name="destination" placeholder="e.g. Paris, London, Tokyo"
+                        <input type="text" id="destination" name="destination" placeholder="e.g. Chennai, Ooty, Goa"
                             required>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" data-step-group="2">
                         <label for="departure_date"><i class="fas fa-calendar-alt"></i> Departure</label>
                         <input type="date" id="departure_date" name="departure_date" required>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" data-step-group="2">
                         <label for="return_date"><i class="fas fa-calendar-check"></i> Return</label>
                         <input type="date" id="return_date" name="return_date" required>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" data-step-group="2">
                         <label for="budget"><i class="fas fa-wallet"></i> Budget</label>
                         <select id="budget" name="budget">
                             <option value="budget">Budget-Friendly</option>
@@ -137,17 +204,17 @@
                             <option value="luxury">Luxury</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" data-step-group="2">
                         <label for="travelers"><i class="fas fa-users"></i> Travelers</label>
                         <input type="number" id="travelers" name="travelers" min="1" max="10" value="2">
                     </div>
-                    <div class="form-group full-width">
+                    <div class="form-group full-width" data-step-group="3">
                         <label for="interests"><i class="fas fa-heart"></i> Interests</label>
                         <input type="text" id="interests" name="interests"
                             placeholder="e.g. culture, food, history, adventure, nightlife"
                             value="culture, food, history">
                     </div>
-                    <div class="form-group full-width">
+                    <div class="form-group full-width" data-step-group="3">
                         <label for="special_requests"><i class="fas fa-star"></i> Special Requests</label>
                         <textarea id="special_requests" name="special_requests" rows="2"
                             placeholder="Any special requirements or preferences..."></textarea>
@@ -159,12 +226,13 @@
                         <div class="spinner"></div>
                         Agents Working...
                     </span>
+                    <span class="btn-ripple"></span>
                 </button>
             </form>
         </section>
 
         <!-- Pipeline Visualization -->
-        <section class="pipeline-section" id="pipelineSection" style="display:none;">
+        <section class="pipeline-section" id="pipelineSection" style="display:none;" data-animate="fadeInUp">
             <h2 class="section-title"><i class="fas fa-diagram-project"></i> LangGraph Pipeline</h2>
             <div class="pipeline">
                 <div class="pipeline-node" data-step="collect_input">
@@ -204,8 +272,52 @@
             </div>
         </section>
 
+        <!-- Loading Skeleton -->
+        <section class="skeleton-section" id="skeletonSection" style="display:none;">
+            <div class="skeleton-header">
+                <div class="skeleton-block skeleton-title"></div>
+                <div class="skeleton-block skeleton-subtitle"></div>
+            </div>
+            <div class="skeleton-tabs">
+                <div class="skeleton-block skeleton-tab"></div>
+                <div class="skeleton-block skeleton-tab"></div>
+                <div class="skeleton-block skeleton-tab"></div>
+                <div class="skeleton-block skeleton-tab"></div>
+                <div class="skeleton-block skeleton-tab"></div>
+            </div>
+            <div class="skeleton-cards">
+                <div class="skeleton-card">
+                    <div class="skeleton-block skeleton-card-icon"></div>
+                    <div class="skeleton-card-lines">
+                        <div class="skeleton-block skeleton-line-long"></div>
+                        <div class="skeleton-block skeleton-line-short"></div>
+                        <div class="skeleton-block skeleton-line-medium"></div>
+                    </div>
+                    <div class="skeleton-block skeleton-card-price"></div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-block skeleton-card-icon"></div>
+                    <div class="skeleton-card-lines">
+                        <div class="skeleton-block skeleton-line-long"></div>
+                        <div class="skeleton-block skeleton-line-short"></div>
+                        <div class="skeleton-block skeleton-line-medium"></div>
+                    </div>
+                    <div class="skeleton-block skeleton-card-price"></div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-block skeleton-card-icon"></div>
+                    <div class="skeleton-card-lines">
+                        <div class="skeleton-block skeleton-line-long"></div>
+                        <div class="skeleton-block skeleton-line-short"></div>
+                        <div class="skeleton-block skeleton-line-medium"></div>
+                    </div>
+                    <div class="skeleton-block skeleton-card-price"></div>
+                </div>
+            </div>
+        </section>
+
         <!-- Results Section -->
-        <section class="results-section" id="resultsSection" style="display:none;">
+        <section class="results-section" id="resultsSection" style="display:none;" data-animate="fadeInUp">
             <div class="results-header">
                 <h2 class="section-title"><i class="fas fa-suitcase-rolling"></i> Your Travel Plan</h2>
                 <div class="results-summary" id="resultsSummary"></div>
@@ -247,6 +359,7 @@
     <!-- Chat Widget -->
     <div class="chat-toggle" id="chatToggle" title="Chat with AI Travel Agent">
         <i class="fas fa-comments"></i>
+        <span class="chat-pulse-ring"></span>
     </div>
 
     <div class="chat-panel" id="chatPanel">
@@ -292,12 +405,30 @@
     </div>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer" data-animate="fadeInUp">
         <div class="footer-content">
-            <p>Multi-Agent Travel Planning System &mdash; Powered by CrewAI, LangGraph & Flask</p>
-            <p class="footer-credit">Made with <i class="fas fa-heart"></i> by Sharan G S &bull; &copy; 2026</p>
-            <span class="footer-version"
-                style="display:inline-block; margin-top:0.4rem; padding:0.15rem 0.6rem; font-size:0.7rem; border-radius:999px; background:rgba(99,102,241,0.15); color:#818cf8; border:1px solid rgba(99,102,241,0.25); letter-spacing:0.05em;">v2.0</span>
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <div class="footer-logo-icon"><i class="fas fa-route"></i></div>
+                    <span>Multi-Agent Travel Planner</span>
+                </div>
+                <p class="footer-tagline">Powered by CrewAI, LangGraph & Flask</p>
+            </div>
+            <div class="footer-tech">
+                <span class="footer-tech-badge"><i class="fab fa-python"></i> Python</span>
+                <span class="footer-tech-badge"><i class="fas fa-brain"></i> CrewAI</span>
+                <span class="footer-tech-badge"><i class="fas fa-diagram-project"></i> LangGraph</span>
+                <span class="footer-tech-badge"><i class="fas fa-server"></i> Flask</span>
+                <span class="footer-tech-badge"><i class="fab fa-js"></i> JavaScript</span>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-credit">Made with <i class="fas fa-heart"></i> by Sharan G S &bull; &copy; 2026</p>
+                <div class="footer-links">
+                    <a href="https://github.com/Sharan-G-S/Multi-Agent-Planning-System" target="_blank"
+                        class="footer-link"><i class="fab fa-github"></i> GitHub</a>
+                    <span class="footer-version">v2.0</span>
+                </div>
+            </div>
         </div>
     </footer>
 

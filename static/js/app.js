@@ -2,7 +2,8 @@
  * Multi-Agent Travel Planner — Frontend Application
  *
  * Handles form submission, API calls, dynamic result rendering,
- * agent status animations, and tab switching.
+ * agent status animations, tab switching, scroll animations,
+ * particles, progress bar, skeleton loading, and micro-interactions.
  */
 
 // ─── DOM Elements ───
@@ -13,6 +14,8 @@ const btnLoading = submitBtn.querySelector('.btn-loading');
 const pipelineSection = document.getElementById('pipelineSection');
 const resultsSection = document.getElementById('resultsSection');
 const resultsSummary = document.getElementById('resultsSummary');
+const progressBar = document.getElementById('progressBar');
+const skeletonSection = document.getElementById('skeletonSection');
 
 // Tab elements
 const tabBtns = document.querySelectorAll('.tab-btn');
@@ -37,7 +40,7 @@ const agentCards = {
     road: document.getElementById('agent-road'),
 };
 
-// Set default dates (departure: tomorrow, return: 5 days later)
+// ─── Default Dates ───
 const today = new Date();
 const tomorrow = new Date(today);
 tomorrow.setDate(tomorrow.getDate() + 7);
@@ -50,6 +53,145 @@ document.getElementById('return_date').value = formatDate(returnDate);
 function formatDate(date) {
     return date.toISOString().split('T')[0];
 }
+
+// ═══════════════════════════════════════════════════════════
+// Floating Particles
+// ═══════════════════════════════════════════════════════════
+function createParticles() {
+    const container = document.getElementById('particles');
+    if (!container) return;
+    const count = 25;
+    for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDuration = (8 + Math.random() * 15) + 's';
+        p.style.animationDelay = (Math.random() * 10) + 's';
+        p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+        const colors = [
+            'rgba(6, 214, 160, 0.2)',
+            'rgba(139, 92, 246, 0.15)',
+            'rgba(59, 130, 246, 0.15)',
+            'rgba(236, 72, 153, 0.12)',
+        ];
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        container.appendChild(p);
+    }
+}
+createParticles();
+
+// ═══════════════════════════════════════════════════════════
+// Scroll-Triggered Animations (Intersection Observer)
+// ═══════════════════════════════════════════════════════════
+const animatedElements = document.querySelectorAll('[data-animate]');
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+animatedElements.forEach(el => observer.observe(el));
+
+// ─── Smooth scroll for hero CTA & scroll hint ───
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+});
+
+const scrollHint = document.getElementById('scrollHint');
+if (scrollHint) {
+    scrollHint.addEventListener('click', () => {
+        document.getElementById('agentsPanel').scrollIntoView({ behavior: 'smooth' });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════
+// Progress Bar
+// ═══════════════════════════════════════════════════════════
+function showProgress(percent) {
+    progressBar.style.width = percent + '%';
+    progressBar.classList.add('active');
+}
+
+function hideProgress() {
+    progressBar.style.width = '100%';
+    setTimeout(() => {
+        progressBar.classList.remove('active');
+        progressBar.style.width = '0';
+    }, 400);
+}
+
+// ═══════════════════════════════════════════════════════════
+// Step Indicators
+// ═══════════════════════════════════════════════════════════
+const steps = document.querySelectorAll('.step');
+const stepLines = document.querySelectorAll('.step-line');
+
+function updateStepIndicators() {
+    const origin = document.getElementById('origin').value.trim();
+    const dest = document.getElementById('destination').value.trim();
+    const depDate = document.getElementById('departure_date').value;
+    const retDate = document.getElementById('return_date').value;
+    const interests = document.getElementById('interests').value.trim();
+
+    // Step 1: Route (origin + destination)
+    const step1Done = origin && dest;
+    // Step 2: Details (dates filled)
+    const step2Done = step1Done && depDate && retDate;
+    // Step 3: Preferences (interests)
+    const step3Done = step2Done && interests;
+
+    steps.forEach(s => s.classList.remove('active', 'complete'));
+    stepLines.forEach(l => l.classList.remove('active'));
+
+    if (step3Done) {
+        steps[0].classList.add('complete');
+        steps[1].classList.add('complete');
+        steps[2].classList.add('active');
+        stepLines[0].classList.add('active');
+        stepLines[1].classList.add('active');
+    } else if (step2Done) {
+        steps[0].classList.add('complete');
+        steps[1].classList.add('active');
+        stepLines[0].classList.add('active');
+    } else if (step1Done) {
+        steps[0].classList.add('active');
+        stepLines[0].classList.add('active');
+    } else {
+        steps[0].classList.add('active');
+    }
+}
+
+// Attach listeners to form fields
+['origin', 'destination', 'departure_date', 'return_date', 'interests'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', updateStepIndicators);
+});
+updateStepIndicators();
+
+// ═══════════════════════════════════════════════════════════
+// Button Ripple Effect
+// ═══════════════════════════════════════════════════════════
+submitBtn.addEventListener('mousedown', (e) => {
+    const ripple = submitBtn.querySelector('.btn-ripple');
+    if (!ripple) return;
+    const rect = submitBtn.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+    ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+    ripple.style.transform = 'scale(0)';
+    ripple.style.animation = 'none';
+    // Force reflow
+    ripple.offsetHeight;
+    ripple.style.animation = 'rippleAnim 0.6s linear';
+});
 
 // ─── Tab Switching ───
 tabBtns.forEach(btn => {
@@ -103,8 +245,8 @@ function updatePipelineStep(step, status) {
     });
 }
 
-async function animatePipeline(stepsCompleted) {
-    const steps = ['collect_input', 'search_flights', 'search_hotels', 'search_trains', 'search_road', 'build_itinerary', 'compile_results'];
+async function animatePipeline() {
+    const pSteps = ['collect_input', 'search_flights', 'search_hotels', 'search_trains', 'search_road', 'build_itinerary', 'compile_results'];
     const agentMapping = {
         'search_flights': 'flight',
         'search_hotels': 'hotel',
@@ -113,23 +255,21 @@ async function animatePipeline(stepsCompleted) {
         'build_itinerary': 'itinerary',
     };
 
-    for (let i = 0; i < steps.length; i++) {
-        const step = steps[i];
-
-        // Set current as active
+    for (let i = 0; i < pSteps.length; i++) {
+        const step = pSteps[i];
         updatePipelineStep(step, 'active');
 
-        // Update agent status
         if (agentMapping[step]) {
             setAgentStatus(agentMapping[step], 'working');
         }
 
+        // Update progress bar
+        showProgress(((i + 1) / pSteps.length) * 90);
+
         await sleep(600);
 
-        // Mark as completed
         updatePipelineStep(step, 'completed');
 
-        // Update agent status
         if (agentMapping[step]) {
             setAgentStatus(agentMapping[step], 'complete');
         }
@@ -145,11 +285,43 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// ═══════════════════════════════════════════════════════════
+// Skeleton Loading
+// ═══════════════════════════════════════════════════════════
+function showSkeleton() {
+    skeletonSection.style.display = 'block';
+}
+
+function hideSkeleton() {
+    skeletonSection.style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════════════════
+// Animated Counter
+// ═══════════════════════════════════════════════════════════
+function animateCounter(element, target, suffix = '') {
+    const text = typeof target === 'string' ? target : target.toString();
+    const num = parseInt(text);
+    if (isNaN(num)) {
+        element.textContent = target;
+        return;
+    }
+    let current = 0;
+    const step = Math.max(1, Math.ceil(num / 15));
+    const interval = setInterval(() => {
+        current += step;
+        if (current >= num) {
+            current = num;
+            clearInterval(interval);
+        }
+        element.textContent = current + suffix;
+    }, 40);
+}
+
 // ─── Form Submission ───
 travelForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Collect form data
     const formData = {
         origin: document.getElementById('origin').value,
         destination: document.getElementById('destination').value,
@@ -170,12 +342,12 @@ travelForm.addEventListener('submit', async (e) => {
     resetAllAgents();
     resetPipeline();
     showPipeline();
+    showSkeleton();
+    showProgress(5);
 
     try {
-        // Start pipeline animation concurrently
         const animationPromise = animatePipeline();
 
-        // Call API
         const response = await fetch('/api/plan', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -183,9 +355,9 @@ travelForm.addEventListener('submit', async (e) => {
         });
 
         const result = await response.json();
-
-        // Wait for animation to finish
         await animationPromise;
+        hideSkeleton();
+        hideProgress();
 
         if (result.success) {
             renderResults(result.data, formData);
@@ -195,6 +367,8 @@ travelForm.addEventListener('submit', async (e) => {
 
     } catch (error) {
         console.error('Planning error:', error);
+        hideSkeleton();
+        hideProgress();
         showError('Failed to connect to the planning server. Make sure the Flask server is running.');
     } finally {
         btnText.style.display = 'flex';
@@ -203,12 +377,11 @@ travelForm.addEventListener('submit', async (e) => {
     }
 });
 
-// ─── Render Results ───
+// ─── Render Results with Staggered Animation ───
 function renderResults(data, formData) {
     resultsSection.style.display = 'block';
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    // Summary
     const flights = data.flights || [];
     const hotels = data.hotels || [];
     const trains = data.trains || [];
@@ -227,29 +400,19 @@ function renderResults(data, formData) {
         </div>
     `;
 
-    // Update counts
-    flightCount.textContent = flights.length;
-    hotelCount.textContent = hotels.length;
-    trainCount.textContent = trains.length;
-    roadCount.textContent = roadOptions.length;
-    itineraryCount.textContent = itinerary.length + (itinerary.length === 1 ? ' day' : ' days');
+    // Animated counters
+    animateCounter(flightCount, flights.length);
+    animateCounter(hotelCount, hotels.length);
+    animateCounter(trainCount, trains.length);
+    animateCounter(roadCount, roadOptions.length);
+    animateCounter(itineraryCount, itinerary.length, itinerary.length === 1 ? ' day' : ' days');
 
-    // Render flights
     renderFlights(flights);
-
-    // Render hotels
     renderHotels(hotels);
-
-    // Render trains
     renderTrains(trains);
-
-    // Render road options
     renderRoadOptions(roadOptions);
-
-    // Render itinerary
     renderItinerary(itinerary);
 
-    // Show flights tab by default
     tabBtns.forEach(b => b.classList.remove('active'));
     tabBtns[0].classList.add('active');
     flightsTab.style.display = 'block';
@@ -257,6 +420,17 @@ function renderResults(data, formData) {
     trainsTab.style.display = 'none';
     roadTab.style.display = 'none';
     itineraryTab.style.display = 'none';
+
+    // Add staggered animation to result cards
+    requestAnimationFrame(() => addCardAnimations());
+}
+
+function addCardAnimations() {
+    const cards = resultsSection.querySelectorAll('.flight-card, .hotel-card, .train-card, .road-card, .itinerary-day');
+    cards.forEach((card, i) => {
+        card.classList.add('result-card-anim');
+        card.style.animationDelay = (i * 0.08) + 's';
+    });
 }
 
 function renderFlights(flights) {
@@ -265,7 +439,6 @@ function renderFlights(flights) {
         return;
     }
 
-    // Check if the first result is a "No Airport" info card
     if (flights.length === 1 && flights[0].airline === 'No Airport') {
         const f = flights[0];
         flightsTab.innerHTML = `
@@ -343,7 +516,6 @@ function renderTrains(trains) {
         return;
     }
 
-    // Check if the first result is a "No Direct Trains" info card
     if (trains.length === 1 && trains[0].train_name === 'No Direct Trains') {
         const t = trains[0];
         trainsTab.innerHTML = `
@@ -505,7 +677,9 @@ function showError(message) {
     itineraryTab.innerHTML = '';
 }
 
-// ─── Chat Widget ───
+// ═══════════════════════════════════════════════════════════
+// Chat Widget
+// ═══════════════════════════════════════════════════════════
 const chatToggle = document.getElementById('chatToggle');
 const chatPanel = document.getElementById('chatPanel');
 const chatClose = document.getElementById('chatClose');
@@ -530,7 +704,6 @@ chatClose.addEventListener('click', () => {
     chatToggle.classList.remove('active');
 });
 
-// Send message on Enter
 chatInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -540,7 +713,6 @@ chatInput.addEventListener('keydown', (e) => {
 
 chatSend.addEventListener('click', sendChatMessage);
 
-// Suggestion chips
 chatChips.forEach(chip => {
     chip.addEventListener('click', () => {
         const msg = chip.dataset.msg;
@@ -582,7 +754,6 @@ function removeTyping() {
 }
 
 function formatReply(text) {
-    // Simple markdown-like formatting
     return text
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
@@ -594,15 +765,10 @@ async function sendChatMessage() {
     const msg = chatInput.value.trim();
     if (!msg) return;
 
-    // Add user message
     addChatMsg('user', msg);
     chatInput.value = '';
     chatSend.disabled = true;
-
-    // Hide suggestions after first use
     chatSuggestions.style.display = 'none';
-
-    // Show typing indicator
     showTyping();
 
     try {
@@ -619,9 +785,7 @@ async function sendChatMessage() {
             addChatMsg('bot', formatReply(result.reply));
         }
 
-        // If pipeline returned results, render them in the main UI too
         if (result.has_results && result.data && result.params) {
-            // Fill form with parsed params
             document.getElementById('origin').value = result.params.origin || '';
             document.getElementById('destination').value = result.params.destination || '';
             document.getElementById('departure_date').value = result.params.departure_date || '';
@@ -630,11 +794,16 @@ async function sendChatMessage() {
             document.getElementById('travelers').value = result.params.travelers || 2;
             document.getElementById('interests').value = result.params.interests || '';
 
-            // Show pipeline & results
+            updateStepIndicators();
+
             resetAllAgents();
             resetPipeline();
             showPipeline();
+            showSkeleton();
+            showProgress(5);
             await animatePipeline();
+            hideSkeleton();
+            hideProgress();
             renderResults(result.data, result.params);
         }
 
